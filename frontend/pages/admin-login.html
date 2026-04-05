@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login — Smart Campus Events</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/auth.css"/>
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-bg-layer"></div>
+  <div class="auth-bg-dots"></div>
+
+  <button class="auth-back-btn" onclick="location.href='index.html'">← Back to Home</button>
+
+  <div class="auth-card">
+    <!-- Brand -->
+    <div class="auth-brand">
+      <div class="auth-brand-icon" style="background:linear-gradient(135deg,#1a2347,#2563eb);">A</div>
+      <div class="auth-brand-name">Admin <span>Portal</span></div>
+    </div>
+
+    <!-- Role pill -->
+    <div class="role-indicator">🏫 College Administrator Access</div>
+
+
+
+    <!-- Alert -->
+    <div id="alertBox" style="display:none;"></div>
+
+    <h2 class="auth-heading">Admin Login</h2>
+    <p class="auth-subtext">Access your college event management dashboard.</p>
+
+    <div class="form-group">
+      <label class="form-label">Email or Mobile Number <span class="req">*</span></label>
+      <div class="input-group">
+        <span class="input-group-icon">📧</span>
+        <input id="adminId" class="form-control"
+               placeholder="admin@college or mobile number"
+               oninput="Form.clearError('adminId')"/>
+      </div>
+      <span class="form-error" id="adminId-err" style="display:none;"></span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password <span class="req">*</span></label>
+      <div class="input-group">
+        <span class="input-group-icon">🔒</span>
+        <input id="adminPw" class="form-control" type="password"
+               placeholder="Enter your password"
+               oninput="Form.clearError('adminPw')"
+               onkeydown="if(event.key==='Enter') doLogin()"/>
+        <button class="toggle-pw" onclick="togglePw()">👁️</button>
+      </div>
+      <span class="form-error" id="adminPw-err" style="display:none;"></span>
+    </div>
+
+    <button id="loginBtn" class="btn btn-primary btn-block btn-lg" onclick="doLogin()">
+      🔐 Admin Login
+    </button>
+
+    <div class="auth-footer" style="margin-top:18px;font-size:0.8rem;color:var(--text-muted);">
+      For admin access, contact the Super Admin at<br/>
+      <a href="mailto:raghuvansh9199@gmail.com" style="color:var(--blue);">raghuvansh9199@gmail.com</a>
+    </div>
+  </div>
+</div>
+
+<script src="../js/utils.js"></script>
+<script src="../js/api.js"></script>
+<script>
+  // Redirect if already logged in
+  if (Session.isLoggedIn() && Session.getRole() === 'ADMIN') location.href = 'admin-dashboard.html';
+
+  function showAlert(msg, type = 'error') {
+    const icons = { error: '⚠️', success: '✅', info: 'ℹ️' };
+    const el = document.getElementById('alertBox');
+    el.className = `alert alert-${type}`;
+    el.innerHTML = `<span class="alert-icon">${icons[type]}</span><span>${msg}</span>`;
+    el.style.display = 'flex';
+  }
+
+  function togglePw() {
+    const inp = document.getElementById('adminPw');
+    const btn = document.querySelector('.toggle-pw');
+    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+    else { inp.type = 'password'; btn.textContent = '👁️'; }
+  }
+
+  async function doLogin() {
+    const identifier = Form.getVal('adminId');
+    const password   = Form.getVal('adminPw');
+    let ok = true;
+
+    if (!identifier) { Form.showError('adminId', 'Email or mobile is required'); ok = false; }
+    if (!password)   { Form.showError('adminPw', 'Password is required'); ok = false; }
+    if (!ok) return;
+
+    Form.setLoading('loginBtn', true, '🔐 Admin Login');
+    document.getElementById('alertBox').style.display = 'none';
+
+    try {
+      const res = await AuthAPI.adminLogin(identifier, password);
+      Session.save(res.user, res.token, 'ADMIN');
+      Toast.success(`Welcome, ${res.user.name}! 🏫`);
+      setTimeout(() => location.href = 'admin-dashboard.html', 600);
+    } catch (err) {
+      showAlert(err.message || 'Invalid admin credentials.');
+      Form.setLoading('loginBtn', false, '🔐 Admin Login');
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+# ─── OS ────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ─── IDE ────────────────────────────────────
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+
+# ─── Java / Maven ───────────────────────────
+target/
+*.jar
+*.war
+*.class
+*.log
+
+# ─── Node (if ever used) ────────────────────
+node_modules/
+npm-debug.log*
+
+# ─── Uploads (runtime) ──────────────────────
+backend/uploads/
+
+# ─── Environment secrets ────────────────────
+*.env
+.env.local

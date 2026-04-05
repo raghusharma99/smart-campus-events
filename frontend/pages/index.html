@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Campus Events — Home</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <style>
+    /* ─── Landing specific ─────────────────── */
+    body { background: var(--navy); }
+
+    .landing-page {
+      min-height: 100vh;
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .landing-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 25% 45%, rgba(37,99,235,0.28) 0%, transparent 55%),
+        radial-gradient(ellipse at 78% 18%, rgba(6,182,212,0.18) 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 85%, rgba(139,92,246,0.13) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .landing-grid-bg {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 30px 30px;
+      pointer-events: none;
+    }
+
+    /* Header */
+    .landing-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 40px;
+      position: relative; z-index: 10;
+    }
+    .landing-brand { display: flex; align-items: center; gap: 12px; }
+    .landing-logo {
+      width: 40px; height: 40px; border-radius: 11px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 800; color: #fff;
+      font-family: var(--font-display);
+    }
+    .landing-brand-name {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: 1.1rem; color: #fff; letter-spacing: -0.3px;
+    }
+    .landing-brand-name span { color: var(--cyan); }
+    .landing-header-actions { display: flex; gap: 10px; }
+
+    /* Hero */
+    .hero {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 60px 24px 80px;
+      position: relative; z-index: 1;
+    }
+    .hero-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(37,99,235,0.2);
+      border: 1px solid rgba(37,99,235,0.4);
+      color: var(--blue-light);
+      font-size: 0.8rem; font-weight: 600;
+      padding: 6px 14px; border-radius: 20px;
+      margin-bottom: 24px;
+      animation: fadeInUp 0.4s ease;
+    }
+    .hero-label span { color: var(--cyan); }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      color: #fff;
+      font-family: var(--font-display);
+      font-weight: 800;
+      line-height: 1.15;
+      max-width: 750px;
+      margin-bottom: 20px;
+      animation: fadeInUp 0.45s ease 0.05s both;
+    }
+    .hero h1 .highlight { color: var(--cyan); }
+    .hero h1 .highlight2 { color: var(--gold); }
+
+    .hero-subtitle {
+      color: rgba(255,255,255,0.6);
+      font-size: clamp(1rem, 2vw, 1.1rem);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+      animation: fadeInUp 0.45s ease 0.1s both;
+    }
+
+    .hero-actions {
+      display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+      margin-bottom: 70px;
+      animation: fadeInUp 0.45s ease 0.15s both;
+    }
+    .btn-portal {
+      padding: 14px 28px;
+      border-radius: var(--radius);
+      font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: var(--transition);
+      border: none; font-family: var(--font-body);
+      display: inline-flex; align-items: center; gap: 9px;
+    }
+    .btn-student-portal {
+      background: linear-gradient(135deg, var(--blue), var(--blue-light));
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(53, 90, 236, 0.4);
+    }
+    .btn-student-portal:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(22, 95, 250, 0.5); }
+    .btn-admin-portal {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.9);
+      border: 1.5px solid rgba(255,255,255,0.2);
+    }
+    .btn-admin-portal:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+
+    /* Stats row */
+    .hero-stats {
+      display: flex; gap: 40px; flex-wrap: wrap; justify-content: center;
+      animation: fadeInUp 0.45s ease 0.2s both;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-val {
+      font-family: var(--font-display); font-size: 2rem; font-weight: 800;
+      color: #fff; line-height: 1;
+    }
+    .hero-stat-lbl { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-top: 4px; font-weight: 500; }
+
+    /* Features */
+    .features {
+      position: relative; z-index: 1;
+      padding: 0 24px 60px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: var(--transition);
+    }
+    .feature-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+    .feature-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 14px;
+    }
+    .feature-title { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .feature-desc  { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+    /* Categories strip */
+    .cat-strip {
+      position: relative; z-index: 1;
+      padding: 0 24px 70px;
+      text-align: center;
+    }
+    .cat-strip-title {
+      font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+      color: rgba(255,255,255,0.4); margin-bottom: 20px; letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .cat-chips { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .cat-chip {
+      display: flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8);
+      padding: 8px 16px; border-radius: 20px;
+      font-size: 0.875rem; font-weight: 600;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .landing-header { padding: 16px 20px; }
+      .hero { padding: 40px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+<div class="landing-page">
+  <div class="landing-bg"></div>
+  <div class="landing-grid-bg"></div>
+
+  <!-- Header -->
+  <header class="landing-header">
+    <div class="landing-brand">
+      <div class="landing-logo">S</div>
+      <div class="landing-brand-name">Smart <span>Campus</span> Events</div>
+    </div>
+    <div class="landing-header-actions">
+      <button class="btn-portal btn-admin-portal" style="padding:9px 18px;font-size:0.875rem;" onclick="goAdmin()">🏫 Admin Login</button>
+      <button class="btn-portal btn-student-portal" style="padding:9px 18px;font-size:0.875rem;" onclick="goStudent()">🎓 Student Login</button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Connect. Compete.<br/> <span class="highlight">Celebrate.</span></h1>
+    <p class="hero-subtitle">
+      The unified inter-college platform for sports, hackathons, cultural fests, workshops, quizzes and more — all in one place.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-portal btn-student-portal" onclick="goStudent()">🎓 Student Portal</button>
+      <button class="btn-portal btn-admin-portal" onclick="goAdmin()">🏫 College Admin Portal</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // Redirect if already logged in
+  const role = localStorage.getItem('sce_role');
+  if (role === 'STUDENT') location.href = 'student-dashboard.html';
+  else if (role === 'ADMIN') location.href = 'admin-dashboard.html';
+
+  function goStudent() { window.location.href = 'student-login.html'; }
+  function goAdmin()   { window.location.href = 'admin-login.html'; }
+</script>
+</body>
+</html>

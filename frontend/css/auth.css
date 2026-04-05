@@ -1,0 +1,192 @@
+/* =====================================================
+   Smart Campus Events - Auth Page Styles
+   auth.css
+   ===================================================== */
+
+/* ─── Auth Layout ────────────────────────────────── */
+.auth-page {
+  min-height: 100vh;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.auth-bg-layer {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(37,99,235,0.25) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 20%, rgba(6,182,212,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 85%, rgba(139,92,246,0.12) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.auth-bg-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+/* ─── Back Button ────────────────────────────────── */
+.auth-back-btn {
+  position: absolute;
+  top: 20px; left: 20px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.85);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: var(--font-body);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 10;
+}
+.auth-back-btn:hover { background: rgba(255,255,255,0.18); }
+
+/* ─── Auth Card ──────────────────────────────────── */
+.auth-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.05);
+  width: 100%;
+  max-width: 490px;
+  padding: 36px 40px;
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 0.5s ease;
+}
+
+/* ─── Brand ──────────────────────────────────────── */
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+.auth-brand-icon {
+  width: 42px; height: 42px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; font-weight: 800; color: #fff;
+  font-family: var(--font-display);
+  flex-shrink: 0;
+}
+.auth-brand-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+.auth-brand-name span { color: var(--blue); }
+
+/* ─── Tabs ───────────────────────────────────────── */
+.auth-tabs {
+  display: flex;
+  background: var(--gray-100);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 22px;
+  gap: 0;
+}
+.auth-tab {
+  flex: 1;
+  padding: 9px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--gray-500);
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+}
+.auth-tab.active {
+  background: var(--white);
+  color: var(--blue);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* ─── Auth Heading ───────────────────────────────── */
+.auth-heading  { font-size: 1.45rem; margin-bottom: 4px; }
+.auth-subtext  { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 22px; }
+
+/* ─── Divider ────────────────────────────────────── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  color: var(--gray-400);
+  font-size: 0.78rem;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── Footer Link ────────────────────────────────── */
+.auth-footer {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+.auth-footer a,
+.auth-footer span.link {
+  color: var(--blue);
+  font-weight: 600;
+  cursor: pointer;
+}
+.auth-footer span.link:hover { text-decoration: underline; }
+
+/* ─── Demo Hint ──────────────────────────────────── */
+.demo-hint {
+  background: var(--gold-pale);
+  border: 1px solid #fde68a;
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: #92400e;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+
+/* ─── Role Badge ─────────────────────────────────── */
+.role-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--navy);
+  color: rgba(255,255,255,0.85);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+/* ─── Responsive ─────────────────────────────────── */
+@media (max-width: 520px) {
+  .auth-card { padding: 28px 22px; }
+}

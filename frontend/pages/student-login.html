@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Login — Smart Campus Events</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/auth.css"/>
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-bg-layer"></div>
+  <div class="auth-bg-dots"></div>
+
+  <button class="auth-back-btn" onclick="location.href='index.html'">← Back to Home</button>
+
+  <div class="auth-card" id="authCard">
+    <!-- Brand -->
+    <div class="auth-brand">
+      <div class="auth-brand-icon">S</div>
+      <div class="auth-brand-name">Smart <span>Campus</span> Events</div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">🔑 Login</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">✨ Create Account</button>
+    </div>
+
+    <!-- Alert -->
+    <div id="alertBox" style="display:none;"></div>
+
+    <!-- ═══════════════════════════════
+         LOGIN PANEL
+         ═══════════════════════════════ -->
+    <div id="loginPanel">
+      <h2 class="auth-heading">Student Login</h2>
+      <p class="auth-subtext">Welcome back! Enter your credentials to continue.</p>
+
+      <div class="form-group">
+        <label class="form-label">Email or Mobile Number <span class="req">*</span></label>
+        <div class="input-group">
+          <span class="input-group-icon">📧</span>
+          <input id="loginId" class="form-control" placeholder="email@example.com or 10-digit mobile"
+                 oninput="Form.clearError('loginId')"/>
+        </div>
+        <span class="form-error" id="loginId-err" style="display:none;"></span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password <span class="req">*</span></label>
+        <div class="input-group">
+          <span class="input-group-icon">🔒</span>
+          <input id="loginPw" class="form-control" type="password" placeholder="Enter your password"
+                 oninput="Form.clearError('loginPw')" onkeydown="if(event.key==='Enter') doLogin()"/>
+          <button class="toggle-pw" onclick="togglePw('loginPw',this)" title="Show/Hide">👁️</button>
+        </div>
+        <span class="form-error" id="loginPw-err" style="display:none;"></span>
+      </div>
+
+      <button id="loginBtn" class="btn btn-primary btn-block btn-lg" onclick="doLogin()">
+        🚀 Sign In
+      </button>
+
+      <div class="auth-footer">
+        Don't have an account?
+        <span class="link" onclick="switchTab('register')">Create Account</span>
+      </div>
+    </div><!-- end loginPanel -->
+
+    <!-- ═══════════════════════════════
+         REGISTER PANEL
+         ═══════════════════════════════ -->
+    <div id="registerPanel" style="display:none;">
+      <!-- Step indicator -->
+      <div class="steps" id="regSteps">
+        <div class="step-item">
+          <div class="step-circle active" id="sc1">1</div>
+          <span class="step-label active" id="sl1">Academic Info</span>
+        </div>
+        <div class="step-line" id="stepLine"></div>
+        <div class="step-item">
+          <div class="step-circle" id="sc2">2</div>
+          <span class="step-label" id="sl2">Account Setup</span>
+        </div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div id="regStep1">
+        <h2 class="auth-heading">Academic Details</h2>
+        <p class="auth-subtext">Fill in your college and academic information.</p>
+
+        <div class="form-group">
+          <label class="form-label">Full Name <span class="req">*</span></label>
+          <input id="rName" class="form-control" placeholder="e.g. Aarav Sharma" oninput="Form.clearError('rName')"/>
+          <span class="form-error" id="rName-err" style="display:none;"></span>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Enrollment No. <span class="req">*</span></label>
+            <input id="rEnroll" class="form-control" placeholder="e.g. EN2021001" oninput="Form.clearError('rEnroll')"/>
+            <span class="form-error" id="rEnroll-err" style="display:none;"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Roll Number <span class="req">*</span></label>
+            <input id="rRoll" class="form-control" placeholder="e.g. CS21001" oninput="Form.clearError('rRoll')"/>
+            <span class="form-error" id="rRoll-err" style="display:none;"></span>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Course <span class="req">*</span></label>
+            <select id="rCourse" class="form-control" onchange="Form.clearError('rCourse')">
+              <option value="">Select Course</option>
+              <option>B.Tech</option><option>B.Sc</option><option>B.Com</option>
+              <option>BBA</option><option>M.Tech</option><option>MBA</option>
+              <option>MCA</option><option>M.Sc</option>
+            </select>
+            <span class="form-error" id="rCourse-err" style="display:none;"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Branch <span class="req">*</span></label>
+            <select id="rBranch" class="form-control" onchange="Form.clearError('rBranch')">
+              <option value="">Select Branch</option>
+              <option>Computer Science</option><option>Electronics</option>
+              <option>Mechanical</option><option>Civil</option><option>Chemical</option>
+              <option>Information Technology</option><option>Electrical</option>
+              <option>Biotechnology</option>
+            </select>
+            <span class="form-error" id="rBranch-err" style="display:none;"></span>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="form-group">
+            <label class="form-label">Mobile No. <span class="req">*</span></label>
+            <input id="rMobile" class="form-control" placeholder="10-digit" maxlength="10"
+                   oninput="this.value=this.value.replace(/\D/g,'');Form.clearError('rMobile')"/>
+            <span class="form-error" id="rMobile-err" style="display:none;"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Semester</label>
+            <select id="rSem" class="form-control">
+              <option value="1">1</option><option value="2">2</option>
+              <option value="3">3</option><option value="4">4</option>
+              <option value="5" selected>5</option><option value="6">6</option>
+              <option value="7">7</option><option value="8">8</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Year</label>
+            <select id="rYear" class="form-control">
+              <option value="1">1st</option><option value="2">2nd</option>
+              <option value="3" selected>3rd</option><option value="4">4th</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" onclick="goStep2()">
+          Continue →
+        </button>
+      </div><!-- end regStep1 -->
+
+      <!-- STEP 2 -->
+      <div id="regStep2" style="display:none;">
+        <h2 class="auth-heading">Account Setup</h2>
+        <p class="auth-subtext">Set your login credentials and college details.</p>
+
+        <div class="form-group">
+          <label class="form-label">College Name <span class="req">*</span></label>
+          <div class="input-group">
+            <span class="input-group-icon">🏫</span>
+            <input id="rCollege" class="form-control" placeholder="e.g. LNCT BHOPAL" oninput="Form.clearError('rCollege')"/>
+          </div>
+          <span class="form-error" id="rCollege-err" style="display:none;"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address <span class="req">*</span></label>
+          <div class="input-group">
+            <span class="input-group-icon">📧</span>
+            <input id="rEmail" class="form-control" type="email" placeholder="your@email.com" oninput="Form.clearError('rEmail')"/>
+          </div>
+          <span class="form-error" id="rEmail-err" style="display:none;"></span>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Password <span class="req">*</span></label>
+            <div class="input-group">
+              <span class="input-group-icon">🔒</span>
+              <input id="rPass" class="form-control" type="password" placeholder="Min 6 characters" oninput="Form.clearError('rPass')"/>
+              <button class="toggle-pw" onclick="togglePw('rPass',this)">👁️</button>
+            </div>
+            <span class="form-error" id="rPass-err" style="display:none;"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password <span class="req">*</span></label>
+            <div class="input-group">
+              <span class="input-group-icon">🔒</span>
+              <input id="rConfirm" class="form-control" type="password" placeholder="Repeat password" oninput="Form.clearError('rConfirm')"/>
+              <button class="toggle-pw" onclick="togglePw('rConfirm',this)">👁️</button>
+            </div>
+            <span class="form-error" id="rConfirm-err" style="display:none;"></span>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-secondary" onclick="goStep1()">← Back</button>
+          <button id="registerBtn" class="btn btn-primary" style="flex:1" onclick="doRegister()">
+            🎉 Create Account
+          </button>
+        </div>
+      </div><!-- end regStep2 -->
+    </div><!-- end registerPanel -->
+
+  </div><!-- end authCard -->
+</div>
+
+<script src="../js/utils.js"></script>
+<script src="../js/api.js"></script>
+<script>
+  // Redirect if already logged in
+  if (Session.isLoggedIn() && Session.getRole() === 'STUDENT') location.href = 'student-dashboard.html';
+
+  /* ── Tab switch ─────────── */
+  function switchTab(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('tabLogin').classList.toggle('active', isLogin);
+    document.getElementById('tabRegister').classList.toggle('active', !isLogin);
+    document.getElementById('loginPanel').style.display    = isLogin ? 'block' : 'none';
+    document.getElementById('registerPanel').style.display = isLogin ? 'none'  : 'block';
+    hideAlert();
+  }
+
+  /* ── Alert helpers ──────── */
+  function showAlert(msg, type = 'error') {
+    const icons = { error: '⚠️', success: '✅', info: 'ℹ️' };
+    const el = document.getElementById('alertBox');
+    el.className = `alert alert-${type}`;
+    el.innerHTML = `<span class="alert-icon">${icons[type]}</span><span>${msg}</span>`;
+    el.style.display = 'flex';
+  }
+  function hideAlert() { document.getElementById('alertBox').style.display = 'none'; }
+
+  /* ── Password toggle ────── */
+  function togglePw(id, btn) {
+    const inp = document.getElementById(id);
+    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+    else { inp.type = 'password'; btn.textContent = '👁️'; }
+  }
+
+  /* ── LOGIN ──────────────── */
+  async function doLogin() {
+    const identifier = Form.getVal('loginId');
+    const password   = Form.getVal('loginPw');
+    let ok = true;
+
+    if (!identifier) { Form.showError('loginId', 'Email or mobile is required'); ok = false; }
+    if (!password)   { Form.showError('loginPw', 'Password is required'); ok = false; }
+    if (!ok) return;
+
+    Form.setLoading('loginBtn', true, '🚀 Sign In');
+    hideAlert();
+
+    try {
+      const res = await AuthAPI.studentLogin(identifier, password);
+      Session.save(res.user, res.token, 'STUDENT');
+      Toast.success(`Welcome back, ${res.user.name}! 👋`);
+      setTimeout(() => location.href = 'student-dashboard.html', 600);
+    } catch (err) {
+      showAlert(err.message || 'Invalid credentials. Please try again.');
+      Form.setLoading('loginBtn', false, '🚀 Sign In');
+    }
+  }
+
+  /* ── REGISTER STEP 1 ────── */
+  function goStep2() {
+    let ok = true;
+    const checks = [
+      ['rName',   Validate.required(Form.getVal('rName'),   'Full name')],
+      ['rEnroll', Validate.required(Form.getVal('rEnroll'), 'Enrollment number')],
+      ['rRoll',   Validate.required(Form.getVal('rRoll'),   'Roll number')],
+      ['rCourse', Validate.required(Form.getVal('rCourse'), 'Course')],
+      ['rBranch', Validate.required(Form.getVal('rBranch'), 'Branch')],
+      ['rMobile', Validate.mobile(Form.getVal('rMobile'))],
+    ];
+    checks.forEach(([id, err]) => { if (err) { Form.showError(id, err); ok = false; } });
+    if (!ok) return;
+
+    // Update step indicators
+    document.getElementById('sc1').className = 'step-circle done'; document.getElementById('sc1').textContent = '✓';
+    document.getElementById('sl1').className = 'step-label done';
+    document.getElementById('sc2').className = 'step-circle active';
+    document.getElementById('sl2').className = 'step-label active';
+    document.getElementById('stepLine').className = 'step-line done';
+    document.getElementById('regStep1').style.display = 'none';
+    document.getElementById('regStep2').style.display = 'block';
+  }
+
+  function goStep1() {
+    document.getElementById('sc1').className = 'step-circle active'; document.getElementById('sc1').textContent = '1';
+    document.getElementById('sl1').className = 'step-label active';
+    document.getElementById('sc2').className = 'step-circle';
+    document.getElementById('sl2').className = 'step-label';
+    document.getElementById('stepLine').className = 'step-line';
+    document.getElementById('regStep1').style.display = 'block';
+    document.getElementById('regStep2').style.display = 'none';
+  }
+
+  /* ── REGISTER SUBMIT ────── */
+  async function doRegister() {
+    let ok = true;
+    const pass    = Form.getVal('rPass');
+    const confirm = Form.getVal('rConfirm');
+    const checks = [
+      ['rCollege', Validate.required(Form.getVal('rCollege'), 'College name')],
+      ['rEmail',   Validate.email(Form.getVal('rEmail'))],
+      ['rPass',    Validate.password(pass)],
+      ['rConfirm', Validate.confirmPassword(pass, confirm)],
+    ];
+    checks.forEach(([id, err]) => { if (err) { Form.showError(id, err); ok = false; } });
+    if (!ok) return;
+
+    Form.setLoading('registerBtn', true, '🎉 Create Account');
+    hideAlert();
+
+    const payload = {
+      name:         Form.getVal('rName'),
+      enrollmentNo: Form.getVal('rEnroll'),
+      rollNo:       Form.getVal('rRoll'),
+      course:       Form.getVal('rCourse'),
+      branch:       Form.getVal('rBranch'),
+      mobile:       Form.getVal('rMobile'),
+      semester:     parseInt(document.getElementById('rSem').value),
+      year:         parseInt(document.getElementById('rYear').value),
+      college:      Form.getVal('rCollege'),
+      email:        Form.getVal('rEmail'),
+      password:     pass,
+    };
+
+    try {
+      await AuthAPI.studentRegister(payload);
+      Toast.success('Account created successfully! 🎉 Please login.');
+      setTimeout(() => switchTab('login'), 800);
+    } catch (err) {
+      showAlert(err.message || 'Registration failed. Please try again.');
+    } finally {
+      Form.setLoading('registerBtn', false, '🎉 Create Account');
+    }
+  }
+</script>
+</body>
+</html>

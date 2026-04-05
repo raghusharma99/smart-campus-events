@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — Smart Campus Events</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/dashboard.css"/>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <div class="navbar-brand">
+        <div class="navbar-logo" style="background:linear-gradient(135deg,#1a2347,#2563eb);">A</div>
+        <div class="navbar-app-name">Admin <span>Portal</span></div>
+      </div>
+    </div>
+    <div class="navbar-right">
+      <div class="navbar-user">
+        <span class="navbar-user-name" id="navUserName"></span>
+        <div class="navbar-avatar" id="navAvatar"></div>
+      </div>
+      <button class="navbar-logout" onclick="doLogout()">🚪 Logout</button>
+    </div>
+  </nav>
+
+  <div class="app-body">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-section">Admin Panel</div>
+      <a class="sidebar-item active" id="nav-home"    onclick="showPage('home')">    <span class="sidebar-icon">📊</span><span class="sidebar-label">Dashboard</span></a>
+      <a class="sidebar-item"        id="nav-events"  onclick="showPage('events')">  <span class="sidebar-icon">📅</span><span class="sidebar-label">Manage Events</span></a>
+      <a class="sidebar-item"        id="nav-regs"    onclick="showPage('regs')">    <span class="sidebar-icon">👥</span><span class="sidebar-label">Registrations</span><span class="sidebar-badge" id="pendingBadge" style="display:none;"></span></a>
+      <a class="sidebar-item"        id="nav-analytics" onclick="showPage('analytics')"><span class="sidebar-icon">⭐</span><span class="sidebar-label">Feedback & Analytics</span></a>
+      <a class="sidebar-item"        id="nav-students" onclick="showPage('students')"><span class="sidebar-icon">🎓</span><span class="sidebar-label">All Students</span></a>
+      <a class="sidebar-item"        id="nav-profile" onclick="showPage('profile')"> <span class="sidebar-icon">👤</span><span class="sidebar-label">Admin Profile</span></a>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- ════════ HOME ════════ -->
+      <section id="page-home" class="anim-fadeInUp">
+        <div class="page-header">
+          <h2 class="page-title" id="homeTitle">Welcome!</h2>
+          <p class="page-subtitle" id="homeSubtitle"></p>
+        </div>
+        <div class="stat-grid" id="adminStats"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;" id="homeGrids">
+          <div class="card">
+            <div class="card-header"><span class="card-title">📅 Recent Events</span><button class="btn btn-sm btn-outline" onclick="showPage('events')">View All</button></div>
+            <div id="recentEventsList"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">👥 Recent Registrations</span><button class="btn btn-sm btn-outline" onclick="showPage('regs')">View All</button></div>
+            <div id="recentRegsList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ MANAGE EVENTS ════════ -->
+      <section id="page-events" style="display:none;" class="anim-fadeInUp">
+        <div class="page-header-row">
+          <div><h2 class="page-title">Manage Events</h2><p class="page-subtitle">Create and manage your college events</p></div>
+          <button class="btn btn-primary" onclick="openEventForm(null)">+ Create Event</button>
+        </div>
+        <div class="filter-bar">
+          <div class="search-wrap"><span class="search-icon">🔍</span><input id="evMgSearch" class="form-control" placeholder="Search events..." oninput="renderMgEvents()"/></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Event</th><th>Category</th><th>Date</th><th>Slots</th><th>Fee</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="eventsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ════════ REGISTRATIONS ════════ -->
+      <section id="page-regs" style="display:none;" class="anim-fadeInUp">
+        <div class="page-header"><h2 class="page-title">Manage Registrations</h2><p class="page-subtitle">Approve or reject student registrations</p></div>
+        <div class="tabs">
+          <button class="tab active" onclick="filterAdminRegs('ALL',this)">All</button>
+          <button class="tab" onclick="filterAdminRegs('PENDING',this)">⏳ Pending</button>
+          <button class="tab" onclick="filterAdminRegs('APPROVED',this)">✅ Approved</button>
+          <button class="tab" onclick="filterAdminRegs('REJECTED',this)">❌ Rejected</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Student</th><th>Enrollment / Roll</th><th>Event</th><th>Registered</th><th>Payment</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="regsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ════════ FEEDBACK & ANALYTICS ════════ -->
+      <section id="page-analytics" style="display:none;" class="anim-fadeInUp">
+        <div class="page-header"><h2 class="page-title">Feedback & Analytics</h2><p class="page-subtitle">Review student feedback and event ratings</p></div>
+        <div class="stat-grid" id="analyticsStats" style="grid-template-columns:repeat(3,1fr);"></div>
+        <div id="analyticsFeedbackList"></div>
+      </section>
+
+      <!-- ════════ ALL STUDENTS ════════ -->
+      <section id="page-students" style="display:none;" class="anim-fadeInUp">
+        <div class="page-header"><h2 class="page-title" id="studentsTitle">All Students</h2><p class="page-subtitle">Complete list of registered students</p></div>
+        <div class="filter-bar">
+          <div class="search-wrap"><span class="search-icon">🔍</span><input id="stuSearch" class="form-control" placeholder="Search by name, email, enrollment..." oninput="renderStudentsTable()"/></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Student</th><th>Enrollment / Roll</th><th>Course & Branch</th><th>Mobile</th><th>College</th><th>Sem / Year</th></tr></thead>
+            <tbody id="studentsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ════════ ADMIN PROFILE ════════ -->
+      <section id="page-profile" style="display:none;" class="anim-fadeInUp">
+        <div class="profile-hero">
+          <div class="profile-avatar" id="profileAvatar"></div>
+          <div class="profile-hero-info">
+            <h2 id="profileName"></h2>
+            <p id="profileEmail"></p>
+            <div class="profile-tags" id="profileTags"></div>
+          </div>
+          <div class="profile-hero-actions">
+            <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.25);" onclick="toggleProfileEdit()">✏️ Edit Profile</button>
+          </div>
+        </div>
+
+        <!-- View -->
+        <div class="card" id="profileViewCard">
+          <div class="card-header"><span class="card-title">👤 Admin Details</span></div>
+          <div class="card-body"><div class="detail-grid" id="profileDetailGrid"></div></div>
+        </div>
+
+        <!-- Edit -->
+        <div class="card" id="profileEditCard" style="display:none;">
+          <div class="card-header"><span class="card-title">✏️ Edit Profile</span><button class="btn btn-sm btn-secondary" onclick="toggleProfileEdit()">Cancel</button></div>
+          <div class="card-body">
+            <div class="form-group"><label class="form-label">Full Name <span class="req">*</span></label><input id="apName" class="form-control"/><span class="form-error" id="apName-err" style="display:none;"></span></div>
+            <div class="grid-2">
+              <div class="form-group"><label class="form-label">Contact Number <span class="req">*</span></label><input id="apContact" class="form-control" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')"/><span class="form-error" id="apContact-err" style="display:none;"></span></div>
+              <div class="form-group"><label class="form-label">Email <span class="req">*</span></label><input id="apEmail" class="form-control" type="email"/><span class="form-error" id="apEmail-err" style="display:none;"></span></div>
+            </div>
+            <button id="saveAdminProfileBtn" class="btn btn-primary" onclick="saveAdminProfile()">💾 Save Changes</button>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="card" style="margin-top:16px;">
+          <div class="card-header"><span class="card-title">🔒 Change Password</span></div>
+          <div class="card-body" style="max-width:420px;">
+            <div id="apwAlert" style="display:none;"></div>
+            <div class="form-group"><label class="form-label">Current Password</label><input id="apwCurrent" class="form-control" type="password"/></div>
+            <div class="grid-2">
+              <div class="form-group"><label class="form-label">New Password</label><input id="apwNew" class="form-control" type="password"/></div>
+              <div class="form-group"><label class="form-label">Confirm Password</label><input id="apwConfirm" class="form-control" type="password"/></div>
+            </div>
+            <button id="adminPwBtn" class="btn btn-primary" onclick="changeAdminPw()">🔒 Update Password</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ════════ MODAL: EVENT FORM ════════ -->
+<div class="modal-overlay" id="eventFormModal" style="display:none;" onclick="if(event.target===this)Modal.close('eventFormModal')">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3 class="modal-title" id="eventFormTitle">+ Create Event</h3>
+      <button class="modal-close" onclick="Modal.close('eventFormModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Event Title <span class="req">*</span></label><input id="efTitle" class="form-control" placeholder=" Event Title... "/><span class="form-error" id="efTitle-err" style="display:none;"></span></div>
+      <div class="form-group"><label class="form-label">Description <span class="req">*</span></label><textarea id="efDesc" class="form-control" rows="3" placeholder="Describe the event..."></textarea><span class="form-error" id="efDesc-err" style="display:none;"></span></div>
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Category</label>
+          <select id="efCat" class="form-control">
+            <option value="HACKATHON">💻 Hackathon</option><option value="SPORTS">⚽ Sports</option>
+            <option value="CULTURAL">🎭 Cultural</option><option value="WORKSHOP">🔧 Workshop</option>
+            <option value="SEMINAR">📚 Seminar</option><option value="QUIZ">🧠 Quiz</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Location <span class="req">*</span></label><input id="efLoc" class="form-control" placeholder="Venue name"/><span class="form-error" id="efLoc-err" style="display:none;"></span></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Start Date <span class="req">*</span></label><input id="efStart" class="form-control" type="date"/><span class="form-error" id="efStart-err" style="display:none;"></span></div>
+        <div class="form-group"><label class="form-label">End Date <span class="req">*</span></label><input id="efEnd" class="form-control" type="date"/><span class="form-error" id="efEnd-err" style="display:none;"></span></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Registration Fee (₹)</label><input id="efFee" class="form-control" type="number" min="0" value="0" placeholder="0 = Free"/><div class="form-hint">Enter 0 for free event</div></div>
+        <div class="form-group"><label class="form-label">Total Slots</label><input id="efSlots" class="form-control" type="number" min="1" value="100"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select id="efStatus" class="form-control"><option value="ACTIVE">Active</option><option value="DRAFT">Draft</option><option value="CANCELLED">Cancelled</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="Modal.close('eventFormModal')">Cancel</button>
+      <button id="saveEventBtn" class="btn btn-primary" onclick="saveEvent()">💾 Save Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirm -->
+<div class="modal-overlay" id="deleteConfirmModal" style="display:none;">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-header"><h3 class="modal-title">🗑️ Delete Event</h3><button class="modal-close" onclick="Modal.close('deleteConfirmModal')">✕</button></div>
+    <div class="modal-body">
+      <p style="color:var(--text-muted);margin-bottom:6px;">Are you sure you want to delete this event?</p>
+      <p style="font-weight:600;" id="deleteEventName"></p>
+      <p style="font-size:0.8rem;color:var(--red);margin-top:8px;">This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="Modal.close('deleteConfirmModal')">Cancel</button>
+      <button id="confirmDeleteBtn" class="btn btn-danger" onclick="confirmDelete()">🗑️ Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/utils.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>

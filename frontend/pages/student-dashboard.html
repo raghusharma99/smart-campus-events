@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Dashboard — Smart Campus Events</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/dashboard.css"/>
+</head>
+<body>
+
+<!-- ════════════════════════ APP SHELL ════════════════════════ -->
+<div class="app-shell">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <div class="navbar-brand">
+        <div class="navbar-logo">S</div>
+        <div class="navbar-app-name">Smart <span>Campus</span></div>
+      </div>
+    </div>
+    <div class="navbar-right">
+      <div class="navbar-user">
+        <span class="navbar-user-name" id="navUserName"></span>
+        <div class="navbar-avatar" id="navAvatar"></div>
+      </div>
+      <button class="navbar-logout" onclick="doLogout()">🚪 Logout</button>
+    </div>
+  </nav>
+
+  <div class="app-body">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-section">Student Menu</div>
+      <a class="sidebar-item active" id="nav-home"         onclick="showPage('home')">         <span class="sidebar-icon">🏠</span><span class="sidebar-label">Dashboard</span></a>
+      <a class="sidebar-item"       id="nav-events"        onclick="showPage('events')">        <span class="sidebar-icon">📅</span><span class="sidebar-label">Browse Events</span></a>
+      <a class="sidebar-item"       id="nav-myregs"        onclick="showPage('myregs')">        <span class="sidebar-icon">🎟️</span><span class="sidebar-label">My Registrations</span><span class="sidebar-badge" id="regBadge" style="display:none;"></span></a>
+      <a class="sidebar-item"       id="nav-feedback"      onclick="showPage('feedback')">      <span class="sidebar-icon">⭐</span><span class="sidebar-label">My Feedback</span></a>
+      <a class="sidebar-item"       id="nav-profile"       onclick="showPage('profile')">       <span class="sidebar-icon">👤</span><span class="sidebar-label">My Profile</span></a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- ════════ PAGE: HOME ════════ -->
+      <section id="page-home" class="anim-fadeInUp">
+        <div class="welcome-banner">
+          <div class="welcome-banner-inner">
+            <div class="welcome-greeting">Good day! 👋</div>
+            <div class="welcome-name" id="wName">Loading...</div>
+            <div class="welcome-info" id="wInfo"></div>
+            <div class="welcome-quick-stats">
+              <div class="welcome-stat"><div class="welcome-stat-val" id="wConfirmed">0</div><div class="welcome-stat-lbl">Confirmed</div></div>
+              <div class="welcome-stat"><div class="welcome-stat-val" id="wPending">0</div><div class="welcome-stat-lbl">Pending</div></div>
+              <div class="welcome-stat"><div class="welcome-stat-val" id="wUpcoming">0</div><div class="welcome-stat-lbl">Upcoming Events</div></div>
+            </div>
+          </div>
+        </div>
+        <h3 style="font-size:1.1rem;margin-bottom:16px;">🔥 Trending Events</h3>
+        <div class="event-grid" id="homeEventGrid"></div>
+      </section>
+
+      <!-- ════════ PAGE: BROWSE EVENTS ════════ -->
+      <section id="page-events" style="display:none;" class="anim-fadeInUp">
+        <div class="page-header">
+          <h2 class="page-title">Browse Events</h2>
+          <p class="page-subtitle">Discover and register for inter-college events</p>
+        </div>
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input id="evSearch" class="form-control" placeholder="Search events or colleges..." oninput="filterEvents()"/>
+          </div>
+          <div class="cat-filters" id="catFilters"></div>
+        </div>
+        <div class="event-grid" id="allEventGrid"></div>
+      </section>
+
+      <!-- ════════ PAGE: MY REGISTRATIONS ════════ -->
+      <section id="page-myregs" style="display:none;" class="anim-fadeInUp">
+        <div class="page-header">
+          <h2 class="page-title">My Registrations</h2>
+          <p class="page-subtitle">Track all your event registrations</p>
+        </div>
+        <div class="tabs">
+          <button class="tab active" onclick="filterRegs('ALL', this)">All</button>
+          <button class="tab" onclick="filterRegs('PENDING', this)">⏳ Pending</button>
+          <button class="tab" onclick="filterRegs('APPROVED', this)">✅ Approved</button>
+          <button class="tab" onclick="filterRegs('REJECTED', this)">❌ Rejected</button>
+        </div>
+        <div id="regList"></div>
+      </section>
+
+      <!-- ════════ PAGE: FEEDBACK ════════ -->
+      <section id="page-feedback" style="display:none;" class="anim-fadeInUp">
+        <div class="page-header">
+          <h2 class="page-title">My Feedback</h2>
+          <p class="page-subtitle">Reviews you have submitted</p>
+        </div>
+        <div id="feedbackList"></div>
+      </section>
+
+      <!-- ════════ PAGE: PROFILE ════════ -->
+      <section id="page-profile" style="display:none;" class="anim-fadeInUp">
+        <!-- Hero -->
+        <div class="profile-hero">
+          <div class="profile-avatar" id="profileAvatar"></div>
+          <div class="profile-hero-info">
+            <h2 id="profileName"></h2>
+            <p id="profileEmail"></p>
+            <div class="profile-tags" id="profileTags"></div>
+          </div>
+          <div class="profile-hero-actions">
+            <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.25);"
+                    onclick="toggleProfileEdit()">✏️ Edit Profile</button>
+          </div>
+        </div>
+
+        <!-- View Mode -->
+        <div class="card" id="profileViewCard">
+          <div class="card-header"><span class="card-title">👤 Student Details</span></div>
+          <div class="card-body"><div class="detail-grid" id="profileDetailGrid"></div></div>
+        </div>
+
+        <!-- Edit Mode -->
+        <div class="card" id="profileEditCard" style="display:none;">
+          <div class="card-header">
+            <span class="card-title">✏️ Edit Profile</span>
+            <button class="btn btn-sm btn-secondary" onclick="toggleProfileEdit()">Cancel</button>
+          </div>
+          <div class="card-body">
+            <div class="grid-2">
+              <div class="form-group"><label class="form-label">Full Name <span class="req">*</span></label><input id="pName" class="form-control"/><span class="form-error" id="pName-err" style="display:none;"></span></div>
+              <div class="form-group"><label class="form-label">Mobile No. <span class="req">*</span></label><input id="pMobile" class="form-control" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')"/><span class="form-error" id="pMobile-err" style="display:none;"></span></div>
+            </div>
+            <div class="grid-2">
+              <div class="form-group"><label class="form-label">Email <span class="req">*</span></label><input id="pEmail" class="form-control" type="email"/><span class="form-error" id="pEmail-err" style="display:none;"></span></div>
+              <div class="form-group"><label class="form-label">College</label><input id="pCollege" class="form-control"/></div>
+            </div>
+            <div class="grid-2">
+              <div class="form-group"><label class="form-label">Enrollment No.</label><input id="pEnroll" class="form-control"/></div>
+              <div class="form-group"><label class="form-label">Roll Number</label><input id="pRoll" class="form-control"/></div>
+            </div>
+            <div class="grid-3">
+              <div class="form-group"><label class="form-label">Course</label>
+                <select id="pCourse" class="form-control">
+                  <option>B.Tech</option><option>B.Sc</option><option>B.Com</option><option>BBA</option><option>M.Tech</option><option>MBA</option><option>MCA</option><option>M.Sc</option>
+                </select>
+              </div>
+              <div class="form-group"><label class="form-label">Branch</label>
+                <select id="pBranch" class="form-control">
+                  <option>Computer Science</option><option>Electronics</option><option>Mechanical</option><option>Civil</option><option>Chemical</option><option>Information Technology</option><option>Electrical</option><option>Biotechnology</option>
+                </select>
+              </div>
+              <div class="form-group"><label class="form-label">Semester</label>
+                <select id="pSemester" class="form-control">
+                  <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option>
+                </select>
+              </div>
+            </div>
+            <button id="saveProfileBtn" class="btn btn-primary" onclick="saveProfile()">💾 Save Changes</button>
+          </div>
+        </div>
+
+        <!-- Change Password -->
+        <div class="card" style="margin-top:16px;">
+          <div class="card-header"><span class="card-title">🔒 Change Password</span></div>
+          <div class="card-body" style="max-width:420px;">
+            <div id="pwAlert" style="display:none;"></div>
+            <div class="form-group"><label class="form-label">Current Password</label><input id="cpCurrent" class="form-control" type="password" placeholder="Current password"/></div>
+            <div class="grid-2">
+              <div class="form-group"><label class="form-label">New Password</label><input id="cpNew" class="form-control" type="password" placeholder="Min 6 characters"/></div>
+              <div class="form-group"><label class="form-label">Confirm Password</label><input id="cpConfirm" class="form-control" type="password" placeholder="Repeat new password"/></div>
+            </div>
+            <button id="changePwBtn" class="btn btn-primary" onclick="changePassword()">🔒 Update Password</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ════════ MODAL: EVENT DETAIL ════════ -->
+<div class="modal-overlay" id="eventDetailModal" style="display:none;" onclick="if(event.target===this)Modal.close('eventDetailModal')">
+  <div class="modal modal-lg">
+    <div id="eventDetailBanner" style="height:130px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;position:relative;border-radius:var(--radius-xl) var(--radius-xl) 0 0;">
+      <button class="modal-close" style="position:absolute;top:14px;right:14px;" onclick="Modal.close('eventDetailModal')">✕</button>
+    </div>
+    <div class="modal-body" id="eventDetailBody"></div>
+    <div class="modal-footer" id="eventDetailFooter"></div>
+  </div>
+</div>
+
+<!-- ════════ MODAL: PAYMENT ════════ -->
+<div class="modal-overlay" id="payModal" style="display:none;" onclick="if(event.target===this)Modal.close('payModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="payModalTitle">💳 Registration & Payment</h3>
+      <button class="modal-close" onclick="Modal.close('payModal')">✕</button>
+    </div>
+    <div class="modal-body" id="payModalBody"></div>
+  </div>
+</div>
+
+<!-- ════════ MODAL: FEEDBACK ════════ -->
+<div class="modal-overlay" id="feedbackModal" style="display:none;" onclick="if(event.target===this)Modal.close('feedbackModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">⭐ Rate & Review Event</h3>
+      <button class="modal-close" onclick="Modal.close('feedbackModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="font-size:1.05rem;font-weight:700;margin-bottom:4px;" id="fbEventTitle"></div>
+        <p style="color:var(--text-muted);font-size:0.875rem;">Share your honest experience</p>
+        <div class="star-group" id="fbStars" style="justify-content:center;margin-top:14px;"></div>
+        <div id="fbRatingLabel" style="margin-top:8px;font-size:0.875rem;color:var(--text-muted);height:20px;"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your Comments (optional)</label>
+        <textarea id="fbComment" class="form-control" rows="4" placeholder="Tell us what you liked or disliked..."></textarea>
+      </div>
+      <button id="fbSubmitBtn" class="btn btn-gold btn-block btn-lg" onclick="submitFeedback()">⭐ Submit Feedback</button>
+    </div>
+  </div>
+</div>
+
+<!-- Razorpay Checkout SDK -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/student.js"></script>
+</body>
+</html>
