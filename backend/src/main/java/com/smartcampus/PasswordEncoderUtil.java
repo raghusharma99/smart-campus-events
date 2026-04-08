@@ -10,8 +10,8 @@ public class PasswordEncoderUtil {
 
         // ── CHANGE THESE PASSWORDS TO WHATEVER YOU WANT ──────
         String[] passwords = {
-            "admin12345",
-            "Raghu9955"
+            "password"
+
         };
         // ─────────────────────────────────────────────────────
 
